@@ -6,8 +6,7 @@
 class RegEx
 {
 	public:
-		RegEx();
-		RegEx(const char*);
+		RegEx(const char* s=nullptr);
 		~RegEx();
 		void Load(const char*);
 		int Matches(const char*) const; //-1 if no match, else num matching chars

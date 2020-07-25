@@ -5,19 +5,17 @@
 extern void Exit(const char*);
 //void Exit(const char*){}
 
-RegEx::RegEx()
+RegEx::RegEx(const char *s)
 {
 	next = NULL;
 	value = NULL;
 	repeat = false;
 	plainstring = true;
 	valuelen = 0;
-}
 
-RegEx::RegEx(const char *s)
-{
-	RegEx::RegEx();
-	Load(s);
+	if (s) {
+	  Load(s);
+	}
 }
 
 RegEx::~RegEx()
