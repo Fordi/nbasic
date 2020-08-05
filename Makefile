@@ -1,17 +1,52 @@
-OBJECTS = bin/main.o bin/nbasic.o bin/RegEx.o
-TARGET = bin/nbasic
+# Potentially OS-specific
+RMDIR    = rm -rf
+COPY     = cp
+USR_BIN  = /usr/local/bin
+CXX      = g++
+MKDIR_P  = mkdir -p
+CPPFLAGS = -O2 -Wall
+LDFLAGS  =
 
-default: $(OBJECTS)
-	g++ $(OBJECTS) -o $(TARGET)
+# Directories
+OUT         = bin
+SRC         = .
 
-bin/main.o: main.cpp nbasic.h
-	g++ -c main.cpp -o bin/main.o
+# Object dependencies
+NBASIC_DEPS = $(OUT)/main.o \
+              $(OUT)/nbasic.o \
+              $(OUT)/RegEx.o
 
-bin/nbasic.o: nbasic.cpp nbasic.h RegEx.h
-	g++ -c nbasic.cpp -o bin/nbasic.o
+NBASIC      = $(OUT)/nbasic
 
-bin/RegEx.o: RegEx.cpp RegEx.h
-	g++ -c RegEx.cpp -o bin/RegEx.o
+# default target
+default: all
 
+# Header dependencies
+$(NBASIC_DEPS)  : $(SRC)/nbasic.h
+$(OUT)/main.o   :
+$(OUT)/nbasic.o : $(SRC)/RegEx.h
+$(OUT)/RegEx.o  : $(SRC)/RegEx.h
+
+# Binaries
+$(NBASIC) : $(OUT) $(NBASIC_DEPS)
+	$(CPP) -o $(NBASIC) $(NBASIC_DEPS)
+
+# Custom targets
+all: $(NBASIC)
+
+install:
+	$(COPY) $(NBASIC) $(USR_BIN)
+
+# Output directory
+$(OUT):
+	$(MKDIR_P) $(OUT)
+
+# Libs
+$(OUT)/%.o : $(SRC)/%.cpp
+	$(CXX) $(CPPFLAGS) -o $@ -c $< > $@.log 2>&1
+
+# Clean-up
 clean:
-	rm $(TARGET) $(OBJECTS)
+	$(RMDIR) -rf $(OUT)
+
+install:
