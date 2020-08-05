@@ -107,7 +107,7 @@ void TokenList::RemoveToken(int n)
 	while(marker->index > n) marker = marker->prev;
 	Token* tnext = marker->next;
 	Token* tprev = marker->prev;
-	
+
 	//delete the token
 	if (first == marker) first = tnext; //so we don't lose the whole stream
 	marker->next = NULL;
@@ -120,7 +120,7 @@ void TokenList::RemoveToken(int n)
 		else marker = tnext;
 	if (tprev !=NULL) tprev->next = tnext;
 	if (tnext !=NULL) tnext->prev = tprev;
-	
+
 	//decrement downstream index nums
 	Token* temp = tnext;
 	while (temp != NULL)
@@ -276,7 +276,7 @@ bool NBasic::TokenizeLine(const char *line, int linenum)
 		tokens.AddToken(ENDASM, NULL, 0, linenum);
 		return true;
 	}
-	
+
 	//special case, entering ASM block
 	if (IsStartAsm(line))
 	{
@@ -371,7 +371,7 @@ void NBasic::CompactMath()
 					t->value = new char[8];
 					int result = (type==PLUS ? one+two : (type==MINUS ? one-two :
 						(type==SHIFTLEFT ? one<<two : (type==SHIFTRIGHT ? one>>two :
-						(type==BITAND?/*BITAND*/one&two:(type==BITOR?one | two:(one ^ 
+						(type==BITAND?/*BITAND*/one&two:(type==BITOR?one | two:(one ^
 						two)))))));
 					sprintf(t->value,"%i\0", (result+SIXTEENBIT)%SIXTEENBIT);
 					tokens.RemoveToken(i+1);
@@ -638,15 +638,15 @@ void NBasic::OutputVariables(FILE *f)
 			}
 			if (!found) VarAllocError(t->value);
 			for(int j = 0; j < len; j++) memory[start+j] = true;
-			tempvars.SetTokenLocation(i, start);		
+			tempvars.SetTokenLocation(i, start);
 		}
 	}
-	
+
 	//actually output them now
 	for(int i=0; i<numvars; i++)
 	{
 		const Token *t = tempvars.GetToken(i);
-		fprintf(f, "%s = %i\n", t->value, t->location);	
+		fprintf(f, "%s = %i\n", t->value, t->location);
 	}
 }
 
@@ -702,7 +702,7 @@ int NBasic::CompileIdentifiers(int i, int type, int line)
 					NumberValue(TokenValue(i+2),line));
 				return 5;
 			}
-			CompileError("array declaration",line); //invalid array declaration syntax			
+			CompileError("array declaration",line); //invalid array declaration syntax
 		case ENDASM:
 			CompileError("endasm",line); //should never see it here
 	}
@@ -801,7 +801,7 @@ int NBasic::CompileData(int toknum, int type, int line)
 				while (IsHex(s[i]))
 					temp = temp*16+HexValue(s[i++]);
 				ints[numints++] = temp;
-				between_values = true;					
+				between_values = true;
 			}
 			else if (s[i]=='%') //binary
 			{
@@ -902,7 +902,7 @@ int NBasic::CompileConditional(int i, int type, int line)
 {
 	int j = -1; //indicates start of second half of the conditional
 	int cond = -1; //which conditional
-	
+
 	// A cond VAR
 	// A cond NUM
 	// X cond math
@@ -935,7 +935,7 @@ int NBasic::CompileConditional(int i, int type, int line)
 		}
 		j = len + 3;
 	}
-	
+
 	// VAR cond math (compile math, opposite cond)
 	// NUM cond math (compile math, opposite cond)
 	else if((tokens.Match(i+1,VAR) || tokens.Match(i+1,NUMBER)) && IsConditional(i+2) && IsMath(i+3))
@@ -1096,7 +1096,7 @@ int NBasic::CompileSet(int i, int type, int line)
 		char *num = MakeNumber(TokenValue(i+1),line);
 		asmlist.AddToken(STAp, num, strlen(num), line);
 		delete num;
-		return len+2;	
+		return len+2;
 	}
 	//================ set the accumulator register
 	else if (tokens.Match(i,SET,A,X))
@@ -1303,12 +1303,12 @@ int NBasic::CompilePush(int i, int type, int line)
 int NBasic::CompileIncrement(int i, int type, int line)
 {
 	if (tokens.Match(i,INC,X))
-	{	
+	{
 		asmlist.AddToken(INX, "", 0, line);
 		return 2;
 	}
 	else if (tokens.Match(i,DEC,X))
-	{	
+	{
 		asmlist.AddToken(DEX, "", 0, line);
 		return 2;
 	}
@@ -1760,10 +1760,10 @@ void NBasic::Output(FILE *f)
 				break;
   //bitwise or
 			case ORi:
-				fprintf(f, " or #%s\n", t->value);
+				fprintf(f, " ora #%s\n", t->value);
 				break;
 			case ORp:
-				fprintf(f, " or %s\n", t->value);
+				fprintf(f, " ora %s\n", t->value);
 				break;
   //bitwise eor
       case EORi:
