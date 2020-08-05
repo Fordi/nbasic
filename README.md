@@ -2,7 +2,7 @@
 
 To build:
 
-You'll need g++ or another C++ compiler (assigned to the environment variable CXX).
+You'll need g++ or another C++ compiler (assigned to the environment variable `CXX`).
 
 ```bash
 make
