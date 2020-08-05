@@ -1,10 +1,26 @@
-# nbasic Language Reference Manual
+# nbasic
+
+To build:
+
+You'll need g++ or another C++ compiler (assigned to the environment variable CXX).
+
+```bash
+make
+```
+
+To install:
+
+```bash
+sudo make install
+```
+
+## nbasic Language Reference Manual
 
 #### _Updated March 15, 2004_
 
 #### Originally from http://bobrost.com/nes/files/nbasic_manual.html
 
-## Contents
+### Contents
 
 * [About nbasic](#about)
 * [Code Comments](#comments)
@@ -25,7 +41,7 @@
 
 <a name="about" />
 
-## About nbasic
+### About nbasic
 
 `nbasic` is a high-level programming language designed for the 6502 processor, the main CPU of the Nintendo Entertainment System. It has BASIC-like program flow, relying on `goto`, `gosub`, and `return` for most execution flow. It also has no dynamic memory allocation and no actual function parameter passing; rather, globally scoped variables and arrays take the place of these. This kind of language design allows for a very efficient implementation on a low-powered 8-bit CPU such as the NES's 6502.
 
@@ -33,7 +49,7 @@ The language was originally created by Bob Rost for development of the homebrew 
 
 <a name="comments"></a>
 
-## Code Comments
+### Code Comments
 
 Comments are created by using any of several common comment conventions. Comments begin with a double forward slash, a hash mark, or a semicolon. A comment may begin at any location in a line, and the rest of the line is ignored by the compiler.
 
@@ -46,7 +62,7 @@ Comments are created by using any of several common comment conventions. Comment
 
 <a name="asm"></a>
 
-## Inline Assembly
+### Inline Assembly
 
 You may sometimes wish to use inline assembly, such as when a particular advanced feature is not provided natively by the `nbasic` compiler, or when you must feed directives to the assembler. Assembly blocks begin with the `asm` keyword, and they are ended by the `endasm` keyword. The lines of text in between are fed as-is to the assembler. Note that, if you are using nesasm as your assembler, you will be required to start most lines with a space or tab.
 
@@ -64,19 +80,17 @@ In addition to a large block of assembly code, you can also create a single line
 
 <a name="numbers"></a>
 
-## Numbers
+### Numbers
 
 For your convenience, `nbasic` supports binary (base 2), decimal (base 10), and hexadecimal (base 16) numbers. All numbers are treated as unsigned, usually in the range 0 to 255, though sometimes in the 16-bit range for memory locations. Binary numbers begin with a `%` character, decimal numbers are a string of digits, and hexadecimal numbers begin with a `$` character. The hexadecimal letters may be either capital or lowercase. These are examples of the same number written in all three methods:
 
-```
-%11111111
-255
-$ff
-```
+`%11111111`  
+`255`  
+`$ff`  
 
 <a name="vars"></a>
 
-## Variables
+### Variables
 
 The first important rule of `nbasic` variables is that you should not use the names `A`, `X`, or `Y` as variable names. These are special registers of the 6502 processor. You are allowed to use them in many cases as you would a variable, but you should first be familiar with the 6502 and what you are doing in each particular use. As a general rule, array accesses will alter the `X` register, and any sort of arithmetic expression will alter the `A` register. `Y` is not touched in many cases.
 
@@ -84,7 +98,7 @@ General variables in `nbasic` are single unsigned bytes of memory. They have glo
 
 <a name="set"></a>
 
-## Setting Variables
+### Setting Variables
 
 The `set` statement is used to assign a value to a variable, array element, or a specific location in memory. The general syntax is `set _location value_`. The value is always an unsigned byte. These examples demonstrate setting a value to a variable, an array element, and a specific memory location.
 
@@ -98,7 +112,7 @@ It is important to note that the compiler automatically allocates 1 byte of memo
 
 <a name="push"></a>
 
-## Push and Pop
+### Push and Pop
 
 There are times when you may wish to store data on the processor stack. For instance, saving and restoring the values of registers during an interrupt. For important cases like this, you can use the `push` and `pop` keywords to store or retrieve data on the stack. The nbasic implementation will only let you directly push or pop the values of registers. Note that, because `gosub` and `return` also manipulate the stack, you should always be certain to `pop` within the same function as a corresponding `push`. Due to the nature of stacks, if you push several registers, you should pop them in the reverse order. Here is an example of proper stack usage during an interrupt.
 
@@ -116,7 +130,7 @@ IRQ:
 
 <a name="arrays"></a>
 
-## Array Declaration
+### Array Declaration
 
 Arrays and variables are essentially the same in `nbasic`, and they differ primarily in their usage.
 
@@ -151,7 +165,7 @@ It is important to note that `nbasic` automatically allocates the memory region 
 
 <a name="arrays2"></a>
 
-## Array Usage
+### Array Usage
 
 As mentioned above, arrays and variables in `nbasic` are essentially the same, and they differ primarily in usage. An array is a contiguous region of memory assigned to a variable name. Elements in the array may be referenced by the general syntax `[`*`array_name`* *`index`*`]`. Additionally, the first element of the array may be referenced simply by its name. Array elements, like other variables, are unsigned bytes, and they may be used in arithmetic expressions or set like other variables. The index of an array element may be a constant number, a variable, or an arithmetic expression.
 
@@ -174,7 +188,7 @@ set [his_array y] [my_array 2]
 
 <a name="data"></a>
 
-## Static Data
+### Static Data
 
 The `data` keyword allows specifying a string of raw data to be included in the ROM. This is often used for text, palettes, and similar small and unchanging pieces of data. Data may consist of unsigned 8-bit numbers and ASCII strings, each separated by commas. ASCII strings must be enclosed in double quotes, and each character is individually converted to the corresponding ASCII value. Generally, a `data` statement will appear after a label, so that it may be referenced easily.
 
@@ -185,7 +199,7 @@ data 1,3,"A string",0,$10,%10101
 
 <a name="labels"></a>
 
-## Labels
+### Labels
 
 A label in `nbasic` is similar to a line number or label in many other programming languages. Your program may jump to a label to continue execution from that point on. In `nbasic`, labels may also be used as a variable, to allow you to reference static data at that point in the ROM. Labels are written as a name, followed by a colon. These examples demonstrate jumping to a label, and using a label as an array reference.
 
@@ -199,7 +213,7 @@ my_data:
 
 <a name="jumps"></a>
 
-## Jumps
+### Jumps
 
 Program flow is controlled by jumps, which allow your program to move the execution point to a label. The two types of jumps are `goto`, and `gosub`. A goto will simply move the current execution point, as it does in BASIC. A `gosub` is also just like in BASIC; it moves the current execution point, but it also saves the previous execution point on the stack. The `return` statement will return execution to just after the point from which the jump was made. Note that if you call `gosub` rampantly and do not have a `return` for each one, your program will overflow the 256 byte stack, which will crash the game.
 
@@ -224,7 +238,7 @@ Yet another related keyword is `branchto`. See the section on conditionals for i
 
 <a name="arithmetic"></a>
 
-## Arithmetic Expressions
+### Arithmetic Expressions
 
 Arithmetic expressions in nbasic are written in prefix notation. This creates non-ambiguous expressions that are easy for the compiler to parse. Valid operators are addition (`+`), subtraction (`-`), shift left (`<<`), shift right (`>>`), bitwise and (`&`), bitwise or (`|`), bitwise xor (`^`). Each of these operators should be followed by two numbers, variables, array lookups, or arithmetic expressions in order to create a valid expression. Note that bit shifting may only be done by a constant amount.
 
@@ -236,7 +250,7 @@ set value - & bitmask %10101011 + 3 two
 
 <a name="conditionals"></a>
 
-## Conditional Expressions
+### Conditional Expressions
 
 The nbasic language supports two types of conditional statements. The first is `if` *`condition`* *`result`*. This will execute a single nbasic statement if the provided condition is true.
 
@@ -257,7 +271,7 @@ You may notice the use of the `branchto` keyword. This is a special case goto, d
 
 <a name="#keywords"></a>
 
-## List of `nbasic` Keywords
+### List of `nbasic` Keywords
 
 `absolute`  
 `array`  
