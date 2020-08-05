@@ -29,7 +29,7 @@ $(OUT)/RegEx.o  : $(SRC)/RegEx.h
 
 # Binaries
 $(NBASIC) : $(OUT) $(NBASIC_DEPS)
-	$(CPP) -o $(NBASIC) $(NBASIC_DEPS)
+	$(CPP) -o $(NBASIC) $(NBASIC_DEPS) $(LDFLAGS)
 
 # Custom targets
 all: $(NBASIC)
