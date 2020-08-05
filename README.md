@@ -1,5 +1,9 @@
 # nbasic
 
+This repository is of Bob Rost's nbasic compiler, from his [NES game development course](http://bobrost.com/nes/).
+
+See also: [nesasm](https://github.com/Fordi/nesasm).
+
 To build:
 
 You'll need g++ or another C++ compiler (assigned to the environment variable `CXX`).
