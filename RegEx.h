@@ -2,6 +2,7 @@
 #define _REG_EX_H_
 
 //#define REGEX_DEBUG
+#include<iostream>
 
 class RegEx
 {
